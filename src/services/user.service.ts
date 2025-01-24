@@ -59,6 +59,9 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
+    delete data.activities;
+    delete data.reports;
+    delete data.summary;
     return this.prisma.user.update({
       data,
       where,
