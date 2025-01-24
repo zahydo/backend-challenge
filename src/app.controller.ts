@@ -13,12 +13,14 @@ import { Activity, ActivityType, Role, User } from '@prisma/client';
 import { ActivityDTO, UserDTO, UserSearchParams } from './types';
 import { UserService } from './user.service';
 import { TrackingService } from './tracking.service';
+import { ReportService } from './report.service';
 
 @Controller('/users')
 export class AppController {
   constructor(
     private readonly userService: UserService,
     private readonly trackingService: TrackingService,
+    private readonly reportService: ReportService,
   ) {}
 
   @Get('/')
@@ -136,5 +138,26 @@ export class AppController {
       timestamp: new Date(),
       user: { connect: { id: Number(id) } },
     });
+  }
+
+  @Get('/:id/report')
+  async createReport(
+    @Param('id') id: string,
+  ): Promise<{ message: string; url: string }> {
+    const user = await this.userService.user({ id: Number(id) });
+    const pdfUrl = await this.reportService.generatePdfAndReturnUrl(user);
+    await this.trackingService.trackActivity({
+      type: 'PDF_DOWNLOAD',
+      title: 'Report generated',
+      details: `User report generated for ${user.name}`,
+      timestamp: new Date(),
+      user: { connect: { id: Number(id) } },
+    });
+    await this.trackingService.trackReport({
+      title: 'User report',
+      url: pdfUrl,
+      user: { connect: { id: Number(id) } },
+    });
+    return { message: 'Report generated successfully', url: pdfUrl };
   }
 }
