@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiQuery } from '@nestjs/swagger';
 import { Activity, ActivityType, Role, User } from '@prisma/client';
-import { ActivityDTO, UserDTO, UserSearchParams } from './types';
-import { UserService } from './user.service';
-import { TrackingService } from './tracking.service';
-import { ReportService } from './report.service';
+import { ActivityDTO, UserDTO, UserSearchParams } from '../utils/types';
+import { UserService } from '../services/user.service';
+import { TrackingService } from '../services/tracking.service';
+import { ReportService } from '../services/report.service';
 
 @Controller('/users')
 export class AppController {

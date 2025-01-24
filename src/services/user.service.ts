@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { User, Prisma } from '@prisma/client';
-import { UserSearchParams } from './types';
+import { UserSearchParams } from 'src/utils/types';
 
 @Injectable()
 export class UserService {
