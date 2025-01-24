@@ -54,7 +54,7 @@ export class AppController {
   async searchUsers(
     @Query('search') search?: string,
     @Query('skip') skip: number = 0,
-    @Query('take') take: number = 10,
+    @Query('take') take: number = 10000,
     @Query('orderBy') orderBy: string = 'name',
   ): Promise<User[]> {
     const params: UserSearchParams = {
