@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 
 export type UserSearchParams = {
   skip?: number;
@@ -7,3 +7,21 @@ export type UserSearchParams = {
   where?: Prisma.UserWhereInput;
   orderBy?: Prisma.UserOrderByWithRelationInput;
 };
+
+export class UserDTO {
+  id?: number;
+  name: string;
+  email: string;
+  role: Role;
+}
+
+export class ActivityDTO {
+  id?: number;
+  title: string;
+  details?: string;
+  timestamp: Date;
+  type: string;
+  user: UserDTO;
+  createdAt: Date;
+  updatedAt: Date;
+}

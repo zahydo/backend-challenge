@@ -12,6 +12,17 @@ export class UserService {
   ): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: userWhereUniqueInput,
+      select: {
+        activities: true,
+        createdAt: true,
+        email: true,
+        id: true,
+        name: true,
+        role: true,
+        updatedAt: true,
+        summary: true,
+        reports: true,
+      },
     });
   }
 

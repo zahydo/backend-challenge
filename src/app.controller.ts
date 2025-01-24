@@ -9,20 +9,17 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiBody, ApiQuery } from '@nestjs/swagger';
-import { Role, User } from '@prisma/client';
-import { UserSearchParams } from './types';
+import { Activity, ActivityType, Role, User } from '@prisma/client';
+import { ActivityDTO, UserDTO, UserSearchParams } from './types';
 import { UserService } from './user.service';
-
-class UserDTO {
-  id?: number;
-  name: string;
-  email: string;
-  role: Role;
-}
+import { TrackingService } from './tracking.service';
 
 @Controller('/users')
 export class AppController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly trackingService: TrackingService,
+  ) {}
 
   @Get('/')
   @ApiQuery({
@@ -115,5 +112,29 @@ export class AppController {
   @Delete('/:id')
   async deleteUser(@Param('id') id: string): Promise<User> {
     return this.userService.deleteUser({ id: Number(id) });
+  }
+
+  @Post('/:id/activity')
+  @ApiQuery({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'User ID',
+  })
+  @ApiBody({
+    description: 'Activity data',
+    type: Object,
+  })
+  async trackActivity(
+    @Param('id') id: string,
+    @Body() data: ActivityDTO,
+  ): Promise<Activity> {
+    return this.trackingService.trackActivity({
+      type: data.type as ActivityType,
+      details: data.details,
+      title: data.title,
+      timestamp: new Date(),
+      user: { connect: { id: Number(id) } },
+    });
   }
 }
